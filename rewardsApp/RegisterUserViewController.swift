@@ -157,7 +157,7 @@ class RegisterUserViewController: UIViewController {
         task.resume()
     }
     
-    
+    //function to remove the activity indicator
     func removeActivityIndicator(activityIndicator:UIActivityIndicatorView)
     {
         DispatchQueue.main.async {
