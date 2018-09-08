@@ -91,12 +91,12 @@ class RegisterUserViewController: UIViewController {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         
+        //compose a post string that is as per HTTP post request structure
         let postString = ["user_name":userName!,"user_password":userPassword!,"user_email":userEmail!,"first_name":userFirstname!,"last_name":userLastname!] as [String:Any]
         
         
         
         do{
-            
             let httpbody = try JSONSerialization.data(withJSONObject: postString, options: [])
             request.httpBody = httpbody
             print(request)
@@ -106,7 +106,8 @@ class RegisterUserViewController: UIViewController {
             return
         }
         
-        let task = URLSession.shared.dataTask(with: request as URLRequest) { (data, response, error) in
+        let task = URLSession.shared.dataTask(with: request as URLRequest)
+            { (data, response, error) in
             self.removeActivityIndicator(activityIndicator: myActivityIndicator)
             if (error != nil)
             {

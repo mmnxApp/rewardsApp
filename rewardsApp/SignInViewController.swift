@@ -15,55 +15,33 @@ class SignInViewController: UIViewController, GIDSignInUIDelegate {
 
     @IBOutlet weak var UserNameTextfield: UITextField!
     @IBOutlet weak var UserPasswordTextField: UITextField!
-   
+    
+    
     /*
-    @IBAction func Fbbuttontapped(_ sender: Any) {
-        let fbLoginManager : FBSDKLoginManager = FBSDKLoginManager()
-        fbLoginManager.logIn(withReadPermissions: ["email"], from: self) { (result, error) -> Void in
-            if (error == nil){
-                let fbloginresult : FBSDKLoginManagerLoginResult = result!
-                // if user cancel the login
-                if (result?.isCancelled)!{
-                    print("User cancelled login.")
-                    return
-                }
-                if(fbloginresult.grantedPermissions.contains("email"))
-                {
-                    self.getFBUserData()
-                }
-            }
-        }
-    }*/
-    
-    
     //function is fetching the user data
-    func getFBUserData(){
-        if((FBSDKAccessToken.current()) != nil){
+    func getFBUserData() {
+        if((FBSDKAccessToken.current()) != nil)
+        {
             FBSDKGraphRequest(graphPath: "me", parameters: ["fields": "id, name, picture.type(large), email"]).start(completionHandler: { (connection, result, error) -> Void in
-            if (error == nil){
+            if (error == nil)
+                {
                 self.dict = result as! [String : AnyObject]
                 print(result!)
-              let fbuseremail = self.dict["email"]
+                let fbuseremail = self.dict["email"]
                 let fbusername = self.dict["name"]
                 print(self.dict)
-                let registerViewController = self.storyboard?.instantiateViewController(withIdentifier: "RegisterUserViewController") as!
-                RegisterUserViewController
                 
+                //change page
+                let registerViewController = self.storyboard?.instantiateViewController(withIdentifier: "RegisterUserViewController") as! RegisterUserViewController
                 self.present(registerViewController, animated: true);
+                    
                 registerViewController.userEmailTextField.text = fbuseremail as! String
                 registerViewController.userFirstname.text = fbusername as! String
-           
-                
-                
-            }
-        })
+                }
+            })
         }
         
-    }
-    
-    
-    
-    //@IBOutlet weak var fblabels: UILabel!
+    }*/
     
     
     var dict : [String : AnyObject]!
@@ -83,9 +61,10 @@ class SignInViewController: UIViewController, GIDSignInUIDelegate {
     
     @IBAction func didTapSignOut(_ sender: Any) {
         
-        //log out of google
+        //log out of google and facebook
         GIDSignIn.sharedInstance().signOut()
-        displayMessage(userMessage: "Logged out of Google")
+        FBSDKLoginManager().logOut()
+        displayMessage(userMessage: "Logged out")
     }
     
     override func didReceiveMemoryWarning() {
@@ -93,6 +72,7 @@ class SignInViewController: UIViewController, GIDSignInUIDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+ 
     
     @IBAction func SigninbuttonTapped(_ sender: Any) {
         
@@ -235,5 +215,7 @@ class SignInViewController: UIViewController, GIDSignInUIDelegate {
     }
     
     
+
+
 }
 

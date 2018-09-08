@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import GoogleSignIn
+import FBSDKLoginKit
 
 class HomePageViewController: UIViewController {
 
@@ -23,7 +25,18 @@ class HomePageViewController: UIViewController {
     }
     
     @IBAction func SignoutButtonTapped(_ sender: Any) {
-        print("Signoutbutton presed");
+        print("Signoutbutton pressed");
+        
+        //log out of google and facebook
+        GIDSignIn.sharedInstance().signOut()
+        FBSDKLoginManager().logOut()
+        
+        //return to original sign in page
+        let signInPage = self.storyboard?.instantiateViewController(withIdentifier: "SignInViewController") as! SignInViewController
+        
+        let appDelegate = UIApplication.shared.delegate
+        appDelegate?.window??.rootViewController = signInPage
+        
     }
     
     @IBAction func LoadMemberProfilebuttonTapped(_ sender: Any) {

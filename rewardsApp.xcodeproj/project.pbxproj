@@ -123,15 +123,15 @@
 		2CE33EB520EE1C7900BAE31F /* rewardsApp */ = {
 			isa = PBXGroup;
 			children = (
-				2CE33EE420EE251800BAE31F /* SignInViewController.swift */,
+				2CE33EC220EE1CA000BAE31F /* Info.plist */,
 				2CE33EB620EE1C7900BAE31F /* AppDelegate.swift */,
-				2CE33EB820EE1C7900BAE31F /* ViewController.swift */,
+				2CE33EE420EE251800BAE31F /* SignInViewController.swift */,
 				2CE33EE620EE2FB500BAE31F /* RegisterUserViewController.swift */,
+				2CE33EE820EE32C900BAE31F /* HomePageViewController.swift */,
+				2CE33EB820EE1C7900BAE31F /* ViewController.swift */,
 				2CE33EBA20EE1C7900BAE31F /* Main.storyboard */,
 				2CE33EBD20EE1CA000BAE31F /* Assets.xcassets */,
 				2CE33EBF20EE1CA000BAE31F /* LaunchScreen.storyboard */,
-				2CE33EC220EE1CA000BAE31F /* Info.plist */,
-				2CE33EE820EE32C900BAE31F /* HomePageViewController.swift */,
 			);
 			path = rewardsApp;
 			sourceTree = "<group>";
