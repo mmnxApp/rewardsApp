@@ -15,8 +15,32 @@ class SignInViewController: UIViewController, GIDSignInUIDelegate {
 
     @IBOutlet weak var UserNameTextfield: UITextField!
     @IBOutlet weak var UserPasswordTextField: UITextField!
-    
-    
+
+  
+    override func viewDidAppear(_ animated: Bool) {
+
+        
+        if((FBSDKAccessToken.current()) != nil){
+            print("facebook")
+            let homePage =
+                self.storyboard?.instantiateViewController(withIdentifier: "HomePageViewController")as! HomePageViewController
+            
+            let appDelegate = UIApplication.shared.delegate
+            appDelegate?.window??.rootViewController = homePage
+            
+    }
+        //this is still buggy
+        if (GIDSignIn.sharedInstance().hasAuthInKeychain()){
+            print("google")
+            let homePage =
+                self.storyboard?.instantiateViewController(withIdentifier: "HomePageViewController")as! HomePageViewController
+            
+            let appDelegate = UIApplication.shared.delegate
+            appDelegate?.window??.rootViewController = homePage
+        }
+       
+        
+    }
     /*
     //function is fetching the user data
     func getFBUserData() {
@@ -50,13 +74,12 @@ class SignInViewController: UIViewController, GIDSignInUIDelegate {
         super.viewDidLoad()
         
         GIDSignIn.sharedInstance().uiDelegate = self
-        
+        print("hi")
         // Uncomment to automatically sign in the user.
-        //GIDSignIn.sharedInstance().signInSilently()
-        
+        GIDSignIn.sharedInstance().signInSilently()
         // TODO(developer) Configure the sign-in button look/feel
         // ...
-        
+          
     }
     
     @IBAction func didTapSignOut(_ sender: Any) {
@@ -214,7 +237,7 @@ class SignInViewController: UIViewController, GIDSignInUIDelegate {
         }
     }
     
-    
+       
 
 
 }

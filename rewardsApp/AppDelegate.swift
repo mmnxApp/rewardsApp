@@ -14,13 +14,24 @@ import GoogleSignIn
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
 
     var window: UIWindow?
- 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         GIDSignIn.sharedInstance().clientID = "801672842040-nvi0ikk35s85ut54k41mclnq4uatgcmq.apps.googleusercontent.com"
         GIDSignIn.sharedInstance().delegate = self
         
+        /* 
+        if (GIDSignIn.sharedInstance().hasAuthInKeychain()){
+            print("google")
+            let sb = UIStoryboard(name: "Main", bundle: nil)
+            let tabBarVC = sb.instantiateViewController(withIdentifier: "HomePageViewController") as? HomePageViewController
+                window!.rootViewController = tabBarVC
+        }*/
+        
+        
+        
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+        
+
     }
     
     
@@ -41,6 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         
     }
     
+    
     //google sign in function - handles sign in process and any additional operations
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
               withError error: Error!) {
@@ -55,10 +67,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             let familyName = user.profile.familyName
             let email = user.profile.email
             // ...
-            
+    
+            //change storyboard screen
+            let sb = UIStoryboard(name: "Main", bundle: nil)
+            let homePage = sb.instantiateViewController(withIdentifier: "HomePageViewController") as? HomePageViewController
+            window!.rootViewController = homePage
         }
     }
-    
+ 
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!,
               withError error: Error!) {
         // Perform any operations when the user disconnects from app here.

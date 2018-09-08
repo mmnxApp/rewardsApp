@@ -12,6 +12,7 @@ import FBSDKLoginKit
 
 class HomePageViewController: UIViewController {
 
+    
     @IBOutlet weak var UserNameLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,6 +31,7 @@ class HomePageViewController: UIViewController {
         //log out of google and facebook
         GIDSignIn.sharedInstance().signOut()
         FBSDKLoginManager().logOut()
+        
         
         //return to original sign in page
         let signInPage = self.storyboard?.instantiateViewController(withIdentifier: "SignInViewController") as! SignInViewController
