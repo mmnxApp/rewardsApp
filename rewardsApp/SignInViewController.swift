@@ -140,12 +140,14 @@ class SignInViewController: UIViewController, GIDSignInUIDelegate {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         
-        let postString = ["login_id":userName!,"user_password":userPassword!,"linked_fb_acc":" ","linked_google_acc":" "]as [String:Any]
+        //old method of posting
+       // let postString = ["login_id":userName!,"user_password":userPassword!,"linked_fb_acc":" ","linked_google_acc":" "]as [String:Any]
         //let postString = ["foo1":userName!,"foo2":userPassword!]as [String:AnyObject]
         
+       let postString = ["login_method": 1,"login_id":userName!,"user_password":userPassword!]as [String:Any]
         
+
         do{
-            
             let httpbody = try JSONSerialization.data(withJSONObject: postString, options: [])
             request.httpBody = httpbody
             print(request)
@@ -155,35 +157,40 @@ class SignInViewController: UIViewController, GIDSignInUIDelegate {
             return
         }
         
-        let task = URLSession.shared.dataTask(with: request as URLRequest) { (data, response, error) in
+
+        
+        
+        let task = URLSession.shared.dataTask(with: request as URLRequest) { (data: Data?, response: URLResponse?, error: Error?) in
             self.removeActivityIndicator(activityIndicator: myActivityIndicator)
+        
+            //read response
+            let responseString = String(data: data!, encoding: String.Encoding.utf8)
+            print("responseString = \(responseString)")
+            
             if (error != nil)
             {
                 self.displayMessage(userMessage: "Could not successfully perform this request.Please try again later")
                 print("error=\(String(describing:error))")
                 return
             }
-           
-               
+    
+    
                 do{
                     let json = try JSONSerialization.jsonObject(with: data!,options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary
                     
-                    if let parseJSON = json{
-                        print(json)
-                        
-                    //Now we can access valuee of fields inside the database
-                    let loginsuccesful = parseJSON["loginsucessful"] as? String
-                        if (loginsuccesful == "0"){
-                            self.displayMessage(userMessage: "Could not successfully login check username/password ")
+                    //print out the response
+                    print("prewocao!")
+                    print(json)
+                    print("prewocao!")
+                    
+                    if let parseJSON = json
+                    {
+                        //cast the json response as an int (conversions to string always give nil), if loginSuccessFlag isn't part of the response, swift converts it to a nil
+                       let loginSuccessFlag = parseJSON["loginSuccessFlag"] as? Int
+                        if  loginSuccessFlag == 0 {
+                            print(loginSuccessFlag)
+                            self.displayMessage(userMessage: "Could not successfully login check username/password")
                             return
-                        }
-                            
-                    DispatchQueue.main.async {
-                        let homePage =
-                            self.storyboard?.instantiateViewController(withIdentifier: "HomePageViewController")as! HomePageViewController
-                        
-                        let appDelegate = UIApplication.shared.delegate
-                        appDelegate?.window??.rootViewController = homePage
                         }
                     }
                 }catch{
@@ -192,7 +199,15 @@ class SignInViewController: UIViewController, GIDSignInUIDelegate {
                     self.displayMessage(userMessage: "Could not sucessfully perform this request. please try again later")
                     print(error)
                 }
+            
+            DispatchQueue.main.async {
+                let homePage =
+                    self.storyboard?.instantiateViewController(withIdentifier: "HomePageViewController")as! HomePageViewController
                 
+                let appDelegate = UIApplication.shared.delegate
+                appDelegate?.window??.rootViewController = homePage
+            }
+            
             }
         
         task.resume()
