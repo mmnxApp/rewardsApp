@@ -27,11 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                 window!.rootViewController = tabBarVC
         }*/
         
-        
-        
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         
-
     }
     
     
@@ -69,8 +66,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             // ...
     
             //change storyboard screen
-            let sb = UIStoryboard(name: "Main", bundle: nil)
-            let homePage = sb.instantiateViewController(withIdentifier: "HomePageViewController") as? HomePageViewController
+            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+            let homePage = storyBoard.instantiateViewController(withIdentifier: "HomePageViewController") as? HomePageViewController
             window!.rootViewController = homePage
         }
     }
