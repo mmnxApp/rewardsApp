@@ -50,9 +50,106 @@ class SignInViewController: UIViewController, GIDSignInUIDelegate {
                     print(fbUserID)
                     print(fbUserName)
                     
+                    //send HTTP post
+                    
+                    //Create activity indicator look at Examples in swift in UI indicators for more
+                    let myActivityIndicator =
+                        UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+                    
+                    //Position activity indicator at the centerof view
+                    myActivityIndicator.center = self.view.center
+                    
+                    //if needed, you can prevent Activity indictot from  hiding when
+                    // stop animation is called
+                    myActivityIndicator.hidesWhenStopped = false
+                    
+                    //Start Activity indicator will stop when i get a valid request from the HTTP server
+                    myActivityIndicator.startAnimating()
+                    
+                    self.view.addSubview(myActivityIndicator)
+                    
+                    //Send HTTP Request to Register user
+                    guard let myURL = URL(string: "https://vhyrzfixva.execute-api.ap-southeast-2.amazonaws.com/development/post-user-login")else {return}
+                    
+                    //guard let myURL = URL(string: "https://postman-echo.com/post")else {return}
+                    
+                    var request = URLRequest(url: myURL);
+                    request.httpMethod = "POST"//Compose a request
+                    request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "content-type")
+                    request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+                    request.addValue("application/json", forHTTPHeaderField: "Accept")
+                    
+                    let postString = ["login_method": 2,"linked_fb_acc": fbUserID]as [String:Any]
+                    
+                    do{
+                        let httpbody = try JSONSerialization.data(withJSONObject: postString, options: [])
+                        request.httpBody = httpbody
+                        print(request)
+                    }catch let error{
+                        print(error.localizedDescription)
+                        self.displayMessage(userMessage: "Something went wrong...Cant talk to Database")
+                        return
+                    }
+                   
+                    let task = URLSession.shared.dataTask(with: request as URLRequest) { (data: Data?, response: URLResponse?, error: Error?) in
+                        self.removeActivityIndicator(activityIndicator: myActivityIndicator)
+                        
+                        //read response
+                        let responseString = String(data: data!, encoding: String.Encoding.utf8)
+                        print("responseString = \(responseString)")
+                        
+                        if (error != nil)
+                        {
+                            self.displayMessage(userMessage: "Could not successfully perform this request.Please try again later")
+                            print("error=\(String(describing:error))")
+                            return
+                        }
+                        
+                        
+                        do{
+                            let json = try JSONSerialization.jsonObject(with: data!,options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary
+                            
+                            /*
+                             //print out the response
+                             print("printing Json!")
+                             print(json)
+                             print("Json Printed!")
+                             */
+                            
+                            if let parseJSON = json
+                            {
+                                //cast the json response as an int (conversions to string always give nil), if loginSuccessFlag isn't part of the response, swift converts it to a nil
+                                let loginSuccessFlag = parseJSON["loginSuccessFlag"] as? Int
+                                if  loginSuccessFlag == 0 {
+                                    print(loginSuccessFlag)
+                                    self.displayMessage(userMessage: "Login via Facebook unsuccessful")
+                                    return
+                                }
+                            }
+                        }catch{
+                            self.removeActivityIndicator(activityIndicator: myActivityIndicator)
+                            //display an alert dialog
+                            self.displayMessage(userMessage: "Could not sucessfully perform this request. please try again later")
+                            print(error)
+                        }
+                        
+                        DispatchQueue.main.async {
+                            let homePage =
+                                self.storyboard?.instantiateViewController(withIdentifier: "HomePageViewController")as! HomePageViewController
+                            
+                            let appDelegate = UIApplication.shared.delegate
+                            appDelegate?.window??.rootViewController = homePage
+                        }
+                        
+                    }
+                    
+                    task.resume()
+                    
+                    
+                    
                 }
                 
-                //send HTTP post
+
                 
                 /*
                  //change page the user sees
